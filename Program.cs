@@ -10,7 +10,10 @@ app.Run();
 
 void ConfigureMvc(WebApplicationBuilder builder)
 {
-    builder.Services.AddControllers();
+    builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+    {
+        options.SuppressModelStateInvalidFilter = false;
+    });
 }
 
 void ConfigureServices(WebApplicationBuilder builder)
