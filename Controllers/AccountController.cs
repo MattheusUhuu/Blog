@@ -1,6 +1,7 @@
 ﻿using Blog.Data;
 using Blog.Extensions;
 using Blog.Models;
+using Blog.Services;
 using Blog.ViewModels;
 using Blog.ViewModels.Accounts;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace Blog.Controllers
     public class AccountController : ControllerBase
     {
         [HttpPost("v1/accounts/")]
-        public async Task<IActionResult> Register([FromBody] RegisterViewModel model, [FromServices] BlogDataContext context)
+        public async Task<IActionResult> Register([FromBody] RegisterViewModel model, [FromServices] EmailService emailService, [FromServices] BlogDataContext context)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
@@ -32,6 +33,8 @@ namespace Blog.Controllers
             {
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
+
+                emailService.Send(user.Name, user.Email, "Bem vindo ao Blog!", $"Sua senha é <strong>{password}</strong>");
 
                 return Ok(new ResultViewModel<dynamic>(new
                 {
