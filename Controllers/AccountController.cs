@@ -5,6 +5,7 @@ using Blog.ViewModels;
 using Blog.ViewModels.Accounts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SecureIdentity.Password;
 
 namespace Blog.Controllers
 {
@@ -24,6 +25,9 @@ namespace Blog.Controllers
                 Slug = model.Email.Replace("@", "-").Replace(".", "-")
             };
 
+            var password = PasswordGenerator.Generate(length: 25, includeSpecialChars: true, upperCase: false);
+            user.PasswordHash = PasswordHasher.Hash(password);
+
             try
             {
                 await context.Users.AddAsync(user);
@@ -31,7 +35,7 @@ namespace Blog.Controllers
 
                 return Ok(new ResultViewModel<dynamic>(new
                 {
-                    user = user.Email
+                    user = user.Email, password
                 }));
             }
             catch (DbUpdateException)
