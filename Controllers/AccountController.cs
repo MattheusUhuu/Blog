@@ -43,7 +43,7 @@ namespace Blog.Controllers
             }
             catch (DbUpdateException)
             {
-                return StatusCode(500, new ResultViewModel<string>("05XE4 - Este E-mail já está cadastrado"));
+                return StatusCode(400, new ResultViewModel<string>("05XE4 - Este E-mail já está cadastrado"));
             }
             catch
             {
@@ -52,7 +52,7 @@ namespace Blog.Controllers
         }
 
         [HttpPost("v1/accounts/login")]
-        public async Task<IActionResult> Login([FromBody]LoginViewModel model, [FromServices] BlogDataContext context)
+        public async Task<IActionResult> Login([FromBody]LoginViewModel model, [FromServices] TokenService tokenService, [FromServices] BlogDataContext context)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
@@ -67,7 +67,8 @@ namespace Blog.Controllers
 
             try
             {
-                return Ok(new ResultViewModel<string>(user.Email, null));
+                var token = tokenService.GenerateToken(user);
+                return Ok(new ResultViewModel<string>(token, null));
             }
             catch
             {
