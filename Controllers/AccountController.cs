@@ -50,5 +50,29 @@ namespace Blog.Controllers
                 return StatusCode(500, new ResultViewModel<string>("05X06 - Falha interna no servidor"));
             }
         }
+
+        [HttpPost("v1/accounts/login")]
+        public async Task<IActionResult> Login([FromBody]LoginViewModel model, [FromServices] BlogDataContext context)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
+
+            var user = await context.Users.AsNoTracking().Include(x => x.Roles).FirstOrDefaultAsync(x => x.Email == model.Email);
+
+            if (user == null)
+                return StatusCode(401, new ResultViewModel<string>("Usuário ou senha inválidos"));
+
+            if (!PasswordHasher.Verify(user.PasswordHash, model.Password))
+                return StatusCode(401, new ResultViewModel<string>("Usuário ou senha inválidos"));
+
+            try
+            {
+                return Ok(new ResultViewModel<string>(user.Email, null));
+            }
+            catch
+            {
+                return StatusCode(500, new ResultViewModel<string>("05X07 - Falha interna no servidor"));
+            }
+        }
     }
 }
