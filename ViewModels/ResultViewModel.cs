@@ -3,16 +3,16 @@
     public class ResultViewModel<T>
     {
         public T Data { get; set; }
-        public List<string> Errors { get; private set; } = new List<string>();
+        public List<string> Errors { get; set; } = new();
         public ResultViewModel(T data, List<string> errors)
         {
             Data = data;
             Errors = errors;
         }
 
-        public ResultViewModel(T Data)
+        public ResultViewModel(T data)
         {
-            Data = Data;
+            Data = data;
         }
 
         public ResultViewModel(List<string> errors)

@@ -32,7 +32,7 @@ namespace Blog.Data.Mappings
                 .HasColumnType("VARCHAR")
                 .HasMaxLength(255);
 
-            builder.Property(x => x.Image).IsRequired();
+            builder.Property(x => x.Image).IsRequired(false);
 
             builder.Property(x => x.Slug)
                 .IsRequired()
@@ -40,7 +40,7 @@ namespace Blog.Data.Mappings
                 .HasColumnType("VARCHAR")
                 .HasMaxLength(80);
 
-            builder.Property(x => x.Bio).IsRequired();
+            builder.Property(x => x.Bio).IsRequired(false);
 
             builder.HasIndex(x => x.Slug, "IX_User_Slug").IsUnique();
 

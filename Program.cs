@@ -15,6 +15,7 @@ LoadConfiguration(app);
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseStaticFiles();
 app.MapControllers();
 app.Run();
 
@@ -52,7 +53,7 @@ void ConfigureMvc(WebApplicationBuilder builder)
 {
     builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
     {
-        options.SuppressModelStateInvalidFilter = false;
+        options.SuppressModelStateInvalidFilter = true;
     });
 }
 
