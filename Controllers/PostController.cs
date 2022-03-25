@@ -108,7 +108,7 @@ namespace Blog.Controllers
             }
             catch
             {
-                return StatusCode(500, new ResultViewModel<Post>("05X12 - Falhá interna no servidor"));
+                return StatusCode(500, new ResultViewModel<List<Post>>("05X12 - Falhá interna no servidor"));
             }
         }
     }
